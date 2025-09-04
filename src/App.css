@@ -1,0 +1,111 @@
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  z-index: 1000;
+  padding: 20px;
+  background-color: rgba(255,255,255,0.8);
+}
+
+select, input {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 2px solid black;
+  background: white;
+  color: black;
+  font-size: 14px;
+  font-family: system-ui;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+label {
+  color: black;
+  font-family: system-ui;
+  font-size: 14px;
+}
+
+svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  background: white;
+  z-index: -1000;
+}
+
+circle {
+  fill: none;
+  stroke: black;
+}
+
+@media (prefers-color-scheme: dark) {
+  form {
+    background-color: rgba(0,0,0,0.8);
+  }
+
+  select, input {
+    background: #2a2a2a;
+    color: #e0e0e0;
+    border: 2px solid #555;
+    box-shadow: 0 2px 8px rgba(255,255,255,0.1);
+  }
+  
+  label {
+    color: #e0e0e0;
+  }
+  
+  svg {
+    background: #1a1a1a;
+  }
+  
+  circle {
+    stroke: #e0e0e0;
+  }
+}
+
+g {
+  animation-name: rotate;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-fill-mode: infinite;
+  -webkit-animation-name: rotate;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-fill-mode: infinite;
+}
+
+g.forward {
+  animation-direction: normal;
+  -webkit-animation-direction: normal;
+}
+
+g.reverse {
+  animation-direction: reverse;
+  -webkit-animation-direction: reverse;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes rotate {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
