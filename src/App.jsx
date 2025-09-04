@@ -1,16 +1,91 @@
 import { useCallback, useEffect, useState } from 'react'
 import './App.css'
 
-function generateConcentricCircles({ numberOfCircles, startingRadius, radiusIncrement, offsetDistance, angleIncrement }) { 
-  return Array.from({ length: numberOfCircles }, (_, i) => ({
+const generateDemisphere = ({ numberOfCircles, startingRadius, radiusIncrement, offsetDistance, angleIncrement }) =>
+  Array.from({ length: numberOfCircles }, (_, i) => ({
     cx: offsetDistance * Math.cos(i * angleIncrement),
     cy: offsetDistance * Math.sin(i * angleIncrement),
     r: startingRadius + (i * radiusIncrement),
   }));
+
+const svgFromDemisphere = (
+  { numberOfCircles, startingRadius, radiusIncrement, offsetDistance, angleIncrement },
+  { width = 800, height = 600 },
+) =>
+`<?xml version="1.0" encoding="UTF-8"?>
+<svg width="${ width }" height="${ height}" viewBox="-${ width / 2 } -${ height / 2 } ${ width } ${ height }" 
+     xmlns="http://www.w3.org/2000/svg"
+     style="background: white; cursor: pointer;"
+     onclick="toggleDirection()">
+  <style>
+    .rotary-group {
+      animation: rotate-forward 2s infinite linear;
+      transform-origin: 0 0;
+    }
+    .rotary-group.reverse {
+      animation: rotate-reverse 2s infinite linear;
+    }
+    @keyframes rotate-forward {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes rotate-reverse {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+    .circle {
+      fill: none;
+      stroke: black;
+      stroke-width: 1;
+    }
+  </style>
+  
+  <script>
+    <![CDATA[
+    function toggleDirection() {
+      const group = document.querySelector('.rotary-group');
+      group.classList.toggle('reverse');
+    }
+    ]]>
+  </script>
+  
+  <g class="rotary-group">
+${generateDemisphere({ numberOfCircles, startingRadius, radiusIncrement, offsetDistance, angleIncrement }).map(({cx, cy, r}) => 
+    `    <circle class="circle" cx="${cx}" cy="${cy}" r="${r}" />`
+  ).join('\n')}
+  </g>
+  
+  <!-- <text x="-950" y="530" font-family="Arial, sans-serif" font-size="16" fill="black">
+    Rotary Demisphere • ${numberOfCircles} circles • Inspired by Marcel Duchamp
+  </text> -->
+</svg>`;
+
+const downloadAsSVG = (content, filename = 'rotary-demisphere.svg') => {
+  // Browser-safe download using Blob API
+  const blob = new Blob([content], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  
+  // Create temporary download link, trigger download, then remove and clean up blob URL
+  const downloadLink = document.createElement('a');
+  downloadLink.href = url;
+  downloadLink.download = filename;
+  downloadLink.style.display = 'none';
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+  URL.revokeObjectURL(url);
+
+  return content;
 }
 
-function SpiralForm({ currentSpiral, setCurrentSpiral, spiralDisplay, setSpiralDisplay }) {
+function SpiralControls({ currentSpiral, setCurrentSpiral, spiralDisplay, setSpiralDisplay }) {
   const handleSpiralChange = ({target}) => setCurrentSpiral({...currentSpiral, [target.name]: parseFloat(target.value)});
+  
+  const handleDownload = () => {
+    const filename = `${currentSpiral.name.toLowerCase().replace(/\s+/g, '-')}-demisphere.svg`;
+    downloadAsSVG(svgFromDemisphere(currentSpiral, { width: 1920, height: 1080 }), filename);
+  };
+  
   return <form onSubmit={ event => event.preventDefault() }>
     <select 
       onChange={({target}) => setCurrentSpiral(spirals.find(({name}) => name === target.value))} 
@@ -90,15 +165,18 @@ function SpiralForm({ currentSpiral, setCurrentSpiral, spiralDisplay, setSpiralD
       value={spiralDisplay.strokeWidth}
       onChange={({target}) => setSpiralDisplay({...spiralDisplay, strokeWidth: parseFloat(target.value)})}
     />
-    <label htmlFor="reverse">
-      <input
-        type="checkbox"
-        name="reverse"
-        checked={spiralDisplay.reverse}
-        onChange={() => setSpiralDisplay({...spiralDisplay, reverse: !spiralDisplay.reverse})}
-      />
-      Reverse
-    </label>
+    <aside>
+      <label htmlFor="reverse">
+        <input
+          type="checkbox"
+          name="reverse"
+          checked={spiralDisplay.reverse}
+          onChange={() => setSpiralDisplay({...spiralDisplay, reverse: !spiralDisplay.reverse})}
+        />
+        Reverse
+      </label>
+      <button type="button" onClick={handleDownload}>📥 Download</button>
+    </aside>
   </form>;
 }
 
@@ -130,7 +208,7 @@ function App() {
 
   return <>
 
-    <SpiralForm 
+    <SpiralControls 
       currentSpiral={currentSpiral} 
       setCurrentSpiral={setCurrentSpiral} 
       spiralDisplay={spiralDisplay} 
@@ -150,7 +228,7 @@ function App() {
       
     >
       <g className={spiralDisplay.reverse ? "reverse" : "forward"}>
-        {generateConcentricCircles(currentSpiral).map(({cx, cy, r}, index) =>
+        {generateDemisphere(currentSpiral).map(({cx, cy, r}, index) =>
           <circle key={index} cx={cx} cy={cy} r={r} strokeWidth={spiralDisplay.strokeWidth} />
         )}
       </g>
