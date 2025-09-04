@@ -23,9 +23,18 @@ select, input {
 }
 
 label {
+  display: flex;
+  flex-flow: column;
   color: black;
   font-family: system-ui;
   font-size: 14px;
+}
+
+label aside {
+  display: flex;
+  flex-flow: row;
+  width: 100%;
+  justify-content: space-between;
 }
 
 svg {

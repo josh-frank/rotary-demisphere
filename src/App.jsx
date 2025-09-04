@@ -9,9 +9,9 @@ function generateConcentricCircles({ numberOfCircles, startingRadius, radiusIncr
   }));
 }
 
-function SpiralForm( { currentSpiral, setCurrentSpiral, spiralDisplay, setSpiralDisplay } ) {
+function SpiralForm({ currentSpiral, setCurrentSpiral, spiralDisplay, setSpiralDisplay }) {
   const handleSpiralChange = ({target}) => setCurrentSpiral({...currentSpiral, [target.name]: parseFloat(target.value)});
-  return <form>
+  return <form onSubmit={ event => event.preventDefault() }>
     <select 
       onChange={({target}) => setCurrentSpiral(spirals.find(({name}) => name === target.value))} 
       value={currentSpiral.name}
@@ -20,45 +20,67 @@ function SpiralForm( { currentSpiral, setCurrentSpiral, spiralDisplay, setSpiral
         <option key={name} value={name}>{name}</option>
       ))}
     </select>
-    <label htmlFor="numberOfCircles">Number of Circles</label>
-    <input
-      type="number"
-      name="numberOfCircles"
-      value={currentSpiral.numberOfCircles}
-      onChange={handleSpiralChange}
-    />
-    <label htmlFor="startingRadius">Starting Radius</label>
-    <input
-      type="number"
-      step="any"
-      name="startingRadius"
-      value={currentSpiral.startingRadius}
-      onChange={handleSpiralChange}
-    />
-    <label htmlFor="radiusIncrement">Radius Increment</label>
-    <input
-      type="number"
-      step="any"
-      name="radiusIncrement"
-      value={currentSpiral.radiusIncrement}
-      onChange={handleSpiralChange}
-    />
-    <label htmlFor="offsetDistance">Offset Distance</label>
-    <input
-      type="number"
-      step="any"
-      name="offsetDistance"
-      value={currentSpiral.offsetDistance}
-      onChange={handleSpiralChange}
-    />
-    <label htmlFor="angleIncrement">Angle Increment</label>
-    <input
-      type="number"
-      step="any"
-      name="angleIncrement"
-      value={currentSpiral.angleIncrement}
-      onChange={handleSpiralChange}
-    />
+    <label htmlFor="numberOfCircles">
+      Number of Circles
+      <input
+        type="number"
+        name="numberOfCircles"
+        value={currentSpiral.numberOfCircles}
+        onChange={handleSpiralChange}
+      />
+    </label>
+    <label htmlFor="startingRadius">
+      Starting Radius
+      <input
+        type="number"
+        step="any"
+        name="startingRadius"
+        value={currentSpiral.startingRadius}
+        onChange={handleSpiralChange}
+      />
+    </label>
+    <label htmlFor="radiusIncrement">
+      Radius Increment
+      <input
+        type="number"
+        step="any"
+        name="radiusIncrement"
+        value={currentSpiral.radiusIncrement}
+        onChange={handleSpiralChange}
+      />
+      <aside>
+        <button onClick={() => setCurrentSpiral({...currentSpiral, radiusIncrement: currentSpiral.radiusIncrement * Math.PI})}>×π</button>
+        <button onClick={() => setCurrentSpiral({...currentSpiral, radiusIncrement: currentSpiral.radiusIncrement / Math.PI})}>÷π</button>
+        <button onClick={() => setCurrentSpiral({...currentSpiral, radiusIncrement: currentSpiral.radiusIncrement * goldenRatio})}>×φ</button>
+        <button onClick={() => setCurrentSpiral({...currentSpiral, radiusIncrement: currentSpiral.radiusIncrement / goldenRatio})}>÷φ</button>
+      </aside>
+    </label>
+    <label htmlFor="offsetDistance">
+      Offset Distance
+      <input
+        type="number"
+        step="any"
+        name="offsetDistance"
+        value={currentSpiral.offsetDistance}
+        onChange={handleSpiralChange}
+      />
+    </label>
+    <label htmlFor="angleIncrement">
+      Angle Increment
+      <input
+        type="number"
+        step="any"
+        name="angleIncrement"
+        value={currentSpiral.angleIncrement}
+        onChange={handleSpiralChange}
+      />
+      <aside>
+        <button onClick={() => setCurrentSpiral({...currentSpiral, angleIncrement: currentSpiral.angleIncrement * Math.PI})}>×π</button>
+        <button onClick={() => setCurrentSpiral({...currentSpiral, angleIncrement: currentSpiral.angleIncrement / Math.PI})}>÷π</button>
+        <button onClick={() => setCurrentSpiral({...currentSpiral, angleIncrement: currentSpiral.angleIncrement * goldenRatio})}>×φ</button>
+        <button onClick={() => setCurrentSpiral({...currentSpiral, angleIncrement: currentSpiral.angleIncrement / goldenRatio})}>÷φ</button>
+      </aside>
+    </label>
     <hr style={{width: '50%'}} />
     <label htmlFor="strokeWidth">Stroke Width</label>
     <input
@@ -155,9 +177,7 @@ const spirals = [
   { name: 'Whispered Spiral', numberOfCircles: 25, startingRadius: 10, radiusIncrement: 4, offsetDistance: 2, angleIncrement: Math.PI / 16 },
   { name: 'Nautilus Shell', numberOfCircles: 8, startingRadius: 12, radiusIncrement: 35, offsetDistance: 25, angleIncrement: Math.PI / 4 },
   { name: 'DNA Helix', numberOfCircles: 30, startingRadius: 8, radiusIncrement: 3, offsetDistance: 6, angleIncrement: Math.PI / 24 },
-  // { name: 'Zen Circles', numberOfCircles: 10, startingRadius: 20, radiusIncrement: 15, offsetDistance: 0, angleIncrement: 0 },
   { name: 'Octagonal Mandala', numberOfCircles: 16, startingRadius: 16, radiusIncrement: 14, offsetDistance: 12, angleIncrement: Math.PI / 4 },
   { name: 'Chaos Theory', numberOfCircles: 24, startingRadius: 8, radiusIncrement: 7, offsetDistance: 18, angleIncrement: Math.PI / 7 },
   { name: 'Bauhaus Minimal', numberOfCircles: 6, startingRadius: 40, radiusIncrement: 30, offsetDistance: 5, angleIncrement: Math.PI / 6 },
-  // { name: 'Whitehead Spiral', numberOfCircles: 10, startingRadius: 20, radiusIncrement: 20, offsetDistance: 10, angleIncrement: Math.PI / 5 },
 ];
