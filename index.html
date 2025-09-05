@@ -10,8 +10,22 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     <script type="module">
+      const messages = [
+        'Rrose Sélavy et moi esquivons les ecchymoses des esquimaux aux mots exquis',
+        'Bains de gros thé pour grains de beauté sans trop de bengué',
+        "L'enfant qui tète est un souffleur de chair chaude et n'aime pas le chou-fleur de serre-chaude",
+        'Si je te donne un sou, me donneras-tu une paire de ciseaux?',
+        "On demande des moustiques domestiques (demi-stock) pour la cure d'azote sur la côte d'Azur",
+        'Inceste ou la passion de famille, à coups trop tirés',
+        'Esquivons les ecchymoses des Esquimaux aux mots exquis',
+        "Avez-vous déjà mis la moelle de l'épée dans le poêle de l'aimée ?",
+        "Parmi nos articles de quincaillerie paresseuse, nous recommandons le robinet qui s'arrête de couler quand on ne l'écoute pas",
+        "L'aspirant habite Javel et moi j'avais l'habite en spirale"
+      ];
+      const message = messages[Math.floor(Math.random() * messages.length)];
+      const style = 'background-color: black; color: white; font-style: italic; text-transform: uppercase; border: 5px solid black; font-size: 18pt;'
       document.addEventListener("DOMContentLoaded", () => {
-        console.log('%c"Rrose Sélavy et moi esquivons les ecchymoses des esquimaux aux mots exquis"', 'color: red; font-size: 50px;');
+        console.log(`%c${message}`, style);
       });
     </script>
   </body>

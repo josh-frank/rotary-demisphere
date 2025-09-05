@@ -168,6 +168,18 @@ function SpiralControls({ currentSpiral, setCurrentSpiral, spiralDisplay, setSpi
         onChange={({target}) => setSpiralDisplay({...spiralDisplay, strokeWidth: parseFloat(target.value)})}
       />
     </label>
+    <label htmlFor="speed">
+      Speed
+      <input
+        type="range"
+        min="100"
+        max="6000"
+        step="any"
+        name="speed"
+        value={spiralDisplay.speed}
+        onChange={({target}) => setSpiralDisplay({...spiralDisplay, speed: parseFloat(target.value)})}
+      />
+    </label>
     <aside>
       <label htmlFor="reverse">
         <input
@@ -210,6 +222,7 @@ function App() {
   const [spiralDisplay, setSpiralDisplay] = useState({
     reverse: false,
     strokeWidth: 1,
+    speed: 2000,
   });
 
   return <>
@@ -231,14 +244,18 @@ function App() {
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
-      
     >
-      <g className={spiralDisplay.reverse ? "reverse" : "forward"}>
+      <g
+        className={spiralDisplay.reverse ? "reverse" : "forward"}
+        style={{
+          animationDuration: `${spiralDisplay.speed}ms`,
+          WebkitAnimationDuration: `${spiralDisplay.speed}ms`
+        }}
+      >
         {generateDemisphere(currentSpiral).map(({cx, cy, r}, index) =>
           <circle key={index} cx={cx} cy={cy} r={r} strokeWidth={spiralDisplay.strokeWidth} />
         )}
       </g>
-
     </svg>
 
   </>;
