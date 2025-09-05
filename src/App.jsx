@@ -190,8 +190,8 @@ function SpiralControls({ currentSpiral, setCurrentSpiral, spiralDisplay, setSpi
       />
     </label>
     <aside>
-      <button type="button" onClick={handleCopyURL}>🔗 Copy URL</button>
-      <button type="button" onClick={handleDownload}>📥 Download</button>
+      <button type="button" onClick={handleCopyURL}>🔗Copy</button>
+      <button type="button" onClick={handleDownload}>📥Save</button>
     </aside>
     <aside>
       <label htmlFor="reverse">
