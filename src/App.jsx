@@ -11,16 +11,17 @@ const generateDemisphere = ({ numberOfCircles, startingRadius, radiusIncrement, 
 
 const svgFromDemisphere = (
   { numberOfCircles, startingRadius, radiusIncrement, offsetDistance, angleIncrement },
-  { width = 800, height = 600 },
+  { width = 800, height = 600, speed = 2000 },
 ) =>
 `<?xml version="1.0" encoding="UTF-8"?>
+<!-- RotaryDemisphere.com -->
 <svg width="${ width }" height="${ height}" viewBox="-${ width / 2 } -${ height / 2 } ${ width } ${ height }" 
      xmlns="http://www.w3.org/2000/svg"
      style="background: white; cursor: pointer;"
      onclick="toggleDirection()">
   <style>
     .rotary-group {
-      animation: rotate-forward 2s infinite linear;
+      animation: rotate-forward ${speed}ms infinite linear;
       transform-origin: 0 0;
     }
     .rotary-group.reverse {
@@ -40,7 +41,6 @@ const svgFromDemisphere = (
       stroke-width: 1;
     }
   </style>
-  
   <script>
     <![CDATA[
     function toggleDirection() {
@@ -49,24 +49,16 @@ const svgFromDemisphere = (
     }
     ]]>
   </script>
-  
   <g class="rotary-group">
 ${generateDemisphere({ numberOfCircles, startingRadius, radiusIncrement, offsetDistance, angleIncrement }).map(({cx, cy, r}) => 
     `    <circle class="circle" cx="${cx}" cy="${cy}" r="${r}" />`
   ).join('\n')}
   </g>
-  
-  <!-- <text x="-950" y="530" font-family="Arial, sans-serif" font-size="16" fill="black">
-    Rotary Demisphere • ${numberOfCircles} circles • Inspired by Marcel Duchamp
-  </text> -->
 </svg>`;
 
-const downloadAsSVG = (content, filename = 'rotary-demisphere.svg') => {
-  // Browser-safe download using Blob API
+const downloadSVG = (content, filename = 'rotary-demisphere.svg') => {
   const blob = new Blob([content], { type: 'image/svg+xml;charset=utf-8' });
   const url = URL.createObjectURL(blob);
-  
-  // Create temporary download link, trigger download, then remove and clean up blob URL
   const downloadLink = document.createElement('a');
   downloadLink.href = url;
   downloadLink.download = filename;
@@ -75,7 +67,6 @@ const downloadAsSVG = (content, filename = 'rotary-demisphere.svg') => {
   downloadLink.click();
   document.body.removeChild(downloadLink);
   URL.revokeObjectURL(url);
-
   return content;
 }
 
@@ -84,7 +75,10 @@ function SpiralControls({ currentSpiral, setCurrentSpiral, spiralDisplay, setSpi
   
   const handleDownload = () => {
     const filename = `${currentSpiral.name.toLowerCase().replace(/\s+/g, '-')}-demisphere.svg`;
-    downloadAsSVG(svgFromDemisphere(currentSpiral, { width: 1920, height: 1080 }), filename);
+    downloadSVG(
+      svgFromDemisphere(currentSpiral, { width: 1920, height: 1080, speed: spiralDisplay.speed }),
+      filename
+    );
   };
   
   return <form onSubmit={ event => event.preventDefault() }>
