@@ -157,14 +157,16 @@ function SpiralControls({ currentSpiral, setCurrentSpiral, spiralDisplay, setSpi
       </aside>
     </label>
     <hr style={{width: '50%'}} />
-    <label htmlFor="strokeWidth">Stroke Width</label>
-    <input
-      type="number"
-      step="any"
-      name="strokeWidth"
-      value={spiralDisplay.strokeWidth}
-      onChange={({target}) => setSpiralDisplay({...spiralDisplay, strokeWidth: parseFloat(target.value)})}
-    />
+    <label htmlFor="strokeWidth">
+      Stroke Width
+      <input
+        type="number"
+        step="any"
+        name="strokeWidth"
+        value={spiralDisplay.strokeWidth}
+        onChange={({target}) => setSpiralDisplay({...spiralDisplay, strokeWidth: parseFloat(target.value)})}
+      />
+    </label>
     <aside>
       <label htmlFor="reverse">
         <input

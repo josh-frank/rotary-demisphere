@@ -1,0 +1,157 @@
+<!-- With additional thanks to Chris W. Johnson: chriswjohnson.blogspot.com -->
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg id='root' width='100%' height='100%' viewBox='-400 -400 800 800' preserveAspectRatio='xMidYMid slice' zoomAndPan='disable' contentScriptType='text/ecmascript' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink="http://www.w3.org/1999/xlink">
+
+<title>Rotary Demisphere - Digital Duchamp</title>
+<desc>Interactive Rotary Demisphere inspired by Marcel Duchamp's "Rotary Demisphere (Precision Optics)" 1925</desc>
+
+<defs>
+<style type='text/css'>/* <![CDATA[ */
+
+svg {
+  fill: white;
+  background: white;
+}
+
+g#demisphere circle {
+  stroke: black;
+  stroke-width: 1px;
+  fill: none;
+}
+
+/* ]]> */</style>
+</defs>
+
+<g id='demisphere'></g>
+
+<script type='text/ecmascript'>/* <![CDATA[ */
+
+function RotaryDemisphere(numberOfCircles, startingRadius, radiusIncrement, offsetDistance, angleIncrement) {
+  this.init(numberOfCircles, startingRadius, radiusIncrement, offsetDistance, angleIncrement);
+}
+
+RotaryDemisphere.prototype = {
+
+  init: function(numberOfCircles, startingRadius, radiusIncrement, offsetDistance, angleIncrement) {
+    this.numberOfCircles = numberOfCircles;
+    this.startingRadius = startingRadius;
+    this.radiusIncrement = radiusIncrement;
+    this.offsetDistance = offsetDistance;
+    this.angleIncrement = angleIncrement;
+    
+    this.circles = [];
+    this.generateCircles();
+  },
+
+  generateCircles: function() {
+    for (var i = 0; i < this.numberOfCircles; i++) {
+      var angle = i * this.angleIncrement;
+      var cx = this.offsetDistance * Math.cos(angle);
+      var cy = this.offsetDistance * Math.sin(angle);
+      var r = this.startingRadius + (i * this.radiusIncrement);
+      
+      this.circles.push({
+        cx: cx,
+        cy: cy,
+        r: r
+      });
+    }
+  },
+
+  render: function() {
+    var g = document.getElementById('demisphere');
+    
+    // Clear existing circles
+    while (g.firstChild) {
+      g.removeChild(g.firstChild);
+    }
+    
+    // Add new circles
+    for (var i = 0; i < this.circles.length; i++) {
+      var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', this.circles[i].cx);
+      circle.setAttribute('cy', this.circles[i].cy);
+      circle.setAttribute('r', this.circles[i].r);
+      g.appendChild(circle);
+    }
+  }
+};
+
+function DemisphereRotator() {
+  var TimeIncrementMilliseconds = 16;
+  var RotationIncrementDegrees = 2;
+  var RotationPerMillisecond = RotationIncrementDegrees / TimeIncrementMilliseconds;
+  var Canvas = document.getElementById("root");
+  var Demisphere = document.getElementById("demisphere");
+  var Angle = 0;
+  var Rotating = true; // Start automatically
+  var StartCount = 0;
+  var BaseMs;
+  var IntervalID;
+
+  Canvas.addEventListener("click", toggle, false);
+
+  this.toggle = toggle;
+  this.start = start;
+  this.stop = stop;
+  this.rotate = rotate;
+
+  function toggle() {
+    if (Rotating)
+      stop();
+    else
+      start();
+  }
+
+  function start() {
+    StartCount++;
+    BaseMs = Date.now();
+    Rotating = true;
+    IntervalID = window.setInterval(function() { TheRotator.rotate(); }, TimeIncrementMilliseconds);
+  }
+
+  function stop() {
+    window.clearInterval(IntervalID);
+    Rotating = false;
+  }
+
+  function rotate() {
+    if (!Rotating)
+      return;
+
+    var NowMs = Date.now();
+    var Rotation = (NowMs - BaseMs) * RotationPerMillisecond;
+
+    BaseMs = NowMs;
+
+    if (StartCount % 2 != 0)
+      Angle = (Angle - Rotation) % 360;
+    else
+      Angle = (Angle + Rotation) % 360;
+
+    Demisphere.setAttribute("transform", "rotate(" + Angle + ")");
+  }
+}
+
+// Initialize with Divine Proportion spiral
+var goldenRatio = (1 + Math.sqrt(5)) / 2;
+var TheDemisphere = new RotaryDemisphere(
+  11,                           // numberOfCircles
+  16,                           // startingRadius  
+  16 * goldenRatio,             // radiusIncrement
+  13,                           // offsetDistance
+  (Math.PI * 2) / goldenRatio   // angleIncrement
+);
+
+var TheRotator = new DemisphereRotator();
+
+// Render the demisphere
+TheDemisphere.render();
+
+// Start rotating
+TheRotator.start();
+
+/* ]]> */</script>
+
+</svg>
