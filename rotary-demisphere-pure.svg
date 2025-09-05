@@ -1,10 +1,10 @@
-<!-- With additional thanks to Chris W. Johnson: chriswjohnson.blogspot.com -->
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg id='root' width='100%' height='100%' viewBox='-400 -400 800 800' preserveAspectRatio='xMidYMid slice' zoomAndPan='disable' contentScriptType='text/ecmascript' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink="http://www.w3.org/1999/xlink">
 
 <title>Rotary Demisphere - Digital Duchamp</title>
-<desc>Interactive Rotary Demisphere inspired by Marcel Duchamp's "Rotary Demisphere (Precision Optics)" 1925</desc>
+<desc>Interactive Rotary Demisphere inspired by Marcel Duchamp's "Rotary Demisphere (Precision Optics)" (1925)</desc>
+<!-- Additional thanks to Chris W. Johnson: chriswjohnson.blogspot.com -->
 
 <defs>
 <style type='text/css'>/* <![CDATA[ */
@@ -134,14 +134,49 @@ function DemisphereRotator() {
   }
 }
 
-// Initialize with Divine Proportion spiral
-var goldenRatio = (1 + Math.sqrt(5)) / 2;
+// Parse URL parameters for spiral configuration
+function parseURLParams() {
+  var params = new URLSearchParams(window.location.search);
+  var goldenRatio = (1 + Math.sqrt(5)) / 2;
+  
+  // Preset configurations
+  // var presets = {
+  //   'divine': { numberOfCircles: 11, startingRadius: 16, radiusIncrement: 16 * goldenRatio, offsetDistance: 13, angleIncrement: (Math.PI * 2) / goldenRatio },
+  //   'duchamp': { numberOfCircles: 12, startingRadius: 25, radiusIncrement: 20, offsetDistance: 7.5, angleIncrement: Math.PI / 3 },
+  //   'golden': { numberOfCircles: 10, startingRadius: 20, radiusIncrement: 20 * goldenRatio, offsetDistance: 15, angleIncrement: Math.PI / 5 },
+  //   'hypnotic': { numberOfCircles: 20, startingRadius: 15, radiusIncrement: 8, offsetDistance: 12, angleIncrement: Math.PI / 12 },
+  //   'square': { numberOfCircles: 8, startingRadius: 30, radiusIncrement: 25, offsetDistance: 20, angleIncrement: Math.PI / 2 },
+  //   'fibonacci': { numberOfCircles: 13, startingRadius: 13, radiusIncrement: 21, offsetDistance: 8, angleIncrement: Math.PI / 8 },
+  //   'pentagon': { numberOfCircles: 15, startingRadius: 18, radiusIncrement: 12, offsetDistance: 10, angleIncrement: (2 * Math.PI) / 5 },
+  //   'nautilus': { numberOfCircles: 8, startingRadius: 12, radiusIncrement: 35, offsetDistance: 25, angleIncrement: Math.PI / 4 },
+  //   'dna': { numberOfCircles: 30, startingRadius: 8, radiusIncrement: 3, offsetDistance: 6, angleIncrement: Math.PI / 24 },
+  //   'zen': { numberOfCircles: 10, startingRadius: 20, radiusIncrement: 15, offsetDistance: 0, angleIncrement: 0 }
+  // };
+  
+  // Check for preset first
+  // var preset = params.get('preset');
+  // if (preset && presets[preset]) {
+  //   return presets[preset];
+  // }
+  
+  // Otherwise use individual parameters (with Divine Proportion defaults)
+  return {
+    numberOfCircles: parseInt(params.get('circles')) || 11,
+    startingRadius: parseFloat(params.get('radius')) || 16,
+    radiusIncrement: parseFloat(params.get('increment')) || 16 * goldenRatio,
+    offsetDistance: parseFloat(params.get('offset')) || 13,
+    angleIncrement: parseFloat(params.get('angle')) || (Math.PI * 2) / goldenRatio
+  };
+}
+
+// Initialize with URL parameters or defaults
+var spiralConfig = parseURLParams();
 var TheDemisphere = new RotaryDemisphere(
-  11,                           // numberOfCircles
-  16,                           // startingRadius  
-  16 * goldenRatio,             // radiusIncrement
-  13,                           // offsetDistance
-  (Math.PI * 2) / goldenRatio   // angleIncrement
+  spiralConfig.numberOfCircles,
+  spiralConfig.startingRadius,
+  spiralConfig.radiusIncrement,
+  spiralConfig.offsetDistance,
+  spiralConfig.angleIncrement
 );
 
 var TheRotator = new DemisphereRotator();
