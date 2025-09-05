@@ -3,17 +3,18 @@ form {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 0;
   position: relative;
   z-index: 1000;
   padding: 20px;
+  font-size: 0.9em;
 }
 
 select, input {
   padding: 8px 12px;
   border-radius: 6px;
   border: 2px solid black;
-  font-size: 14px;
+  font-size: 0.9em;
   font-family: system-ui;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -29,7 +30,7 @@ button {
   color: black;
   border-radius: 6px;
   cursor: pointer; 
-  font-size: 14px;
+  font-size: 0.9em;
   font-family: system-ui;
 }
 
@@ -37,7 +38,7 @@ label {
   display: flex;
   flex-flow: column;
   font-family: system-ui;
-  font-size: 14px;
+  font-size: 0.9em;
 }
 
 aside {

@@ -6,4 +6,4 @@ No spiral is ever drawn onscreen in this app.
 
 ## `rotary-demisphere-pure.svg`
 
-The **pure SVG version** of this app preserves its functionality without the need for a server, deployment, build, etc. This version uses URL parameters instead of a UI to input demispheres.
+The **pure SVG version** of this app preserves its functionality without the need for a server, deployment, build, etc. This version uses URL params instead of a UI to input demispheres.

@@ -11,11 +11,11 @@ const generateDemisphere = ({ numberOfCircles, startingRadius, radiusIncrement, 
 
 const svgFromDemisphere = (
   { numberOfCircles, startingRadius, radiusIncrement, offsetDistance, angleIncrement },
-  { width = 800, height = 600, speed = 2000 },
+  { width = 800, height = 600, stroke = 1, speed = 2000 },
 ) =>
 `<?xml version="1.0" encoding="UTF-8"?>
 <!-- RotaryDemisphere.com -->
-<svg width="${ width }" height="${ height}" viewBox="-${ width / 2 } -${ height / 2 } ${ width } ${ height }" 
+<svg width="${width}" height="${height}" viewBox="-${width / 2} -${height / 2} ${width} ${height}" 
      xmlns="http://www.w3.org/2000/svg"
      style="background: white; cursor: pointer;"
      onclick="toggleDirection()">
@@ -38,7 +38,7 @@ const svgFromDemisphere = (
     .circle {
       fill: none;
       stroke: black;
-      stroke-width: 1;
+      stroke-width: ${stroke};
     }
   </style>
   <script>
@@ -76,7 +76,12 @@ function SpiralControls({ currentSpiral, setCurrentSpiral, spiralDisplay, setSpi
   const handleDownload = () => {
     const filename = `${currentSpiral.name.toLowerCase().replace(/\s+/g, '-')}-demisphere.svg`;
     downloadSVG(
-      svgFromDemisphere(currentSpiral, { width: 1920, height: 1080, speed: spiralDisplay.speed }),
+      svgFromDemisphere(currentSpiral, {
+        width: 1920,
+        height: 1080,
+        stroke: spiralDisplay.strokeWidth,
+        speed: spiralDisplay.speed
+      }),
       filename
     );
   };
@@ -211,12 +216,21 @@ function App() {
     return () => window.removeEventListener("resize", handleResize);
   }, [handleResize]);
 
-  const [currentSpiral, setCurrentSpiral] = useState(spirals[0]);
+  const urlParams = new URLSearchParams(window.location.search);
+
+  const [currentSpiral, setCurrentSpiral] = useState( !urlParams.size ? spirals[0] : {
+    name: 'Custom',
+    numberOfCircles: parseInt(urlParams.get('circles')) || 10,
+    startingRadius: parseFloat(urlParams.get('radius')) || 20,
+    radiusIncrement: parseFloat(urlParams.get('increment')) || 20 * goldenRatio,
+    offsetDistance: parseFloat(urlParams.get('offset')) || 15,
+    angleIncrement: parseFloat(urlParams.get('angle')) || (Math.PI * 2) / goldenRatio,
+  } );
   
   const [spiralDisplay, setSpiralDisplay] = useState({
     reverse: false,
-    strokeWidth: 1,
-    speed: 2000,
+    strokeWidth: parseFloat(urlParams.get('stroke')) || 1.5,
+    speed: parseFloat(urlParams.get('speed')) || 2000,
   });
 
   return <>
@@ -275,4 +289,5 @@ const spirals = [
   { name: 'Octagonal Mandala', numberOfCircles: 16, startingRadius: 16, radiusIncrement: 14, offsetDistance: 12, angleIncrement: Math.PI / 4 },
   { name: 'Chaos Theory', numberOfCircles: 24, startingRadius: 8, radiusIncrement: 7, offsetDistance: 18, angleIncrement: Math.PI / 7 },
   { name: 'Bauhaus Minimal', numberOfCircles: 6, startingRadius: 40, radiusIncrement: 30, offsetDistance: 5, angleIncrement: Math.PI / 6 },
+  { name: 'Custom', numberOfCircles: 10, startingRadius: 20, radiusIncrement: 40, offsetDistance: 0, angleIncrement: 0 },
 ];
