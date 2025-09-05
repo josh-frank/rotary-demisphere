@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import './App.css'
+import githubLogo from '/github.svg'
 
 const generateDemisphere = ({ numberOfCircles, startingRadius, radiusIncrement, offsetDistance, angleIncrement }) =>
   Array.from({ length: numberOfCircles }, (_, i) => ({
@@ -179,7 +180,7 @@ function SpiralControls({ currentSpiral, setCurrentSpiral, spiralDisplay, setSpi
       </label>
       <button type="button" onClick={handleDownload}>📥 Download</button>
       <a href="https://github.com/josh-frank/rotary-demisphere" target="_blank" rel="noopener noreferrer" title="View on GitHub">
-        <img src="/github-logo.svg" alt="GitHub" width="20" height="20" />
+        <img src={githubLogo} className='github' alt="GitHub" width="20" height="20" />
       </a>
     </aside>
   </form>;

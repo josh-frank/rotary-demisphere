@@ -41,7 +41,7 @@ aside {
   flex-flow: row;
   width: 100%;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
 }
 
 svg {
@@ -109,6 +109,10 @@ circle {
   
   circle {
     stroke: #e0e0e0;
+  }
+
+  .github {
+    filter: invert(1);
   }
 }
 
