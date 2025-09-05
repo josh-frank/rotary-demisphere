@@ -72,7 +72,17 @@ const downloadSVG = (content, filename = 'rotary-demisphere.svg') => {
 
 function SpiralControls({ currentSpiral, setCurrentSpiral, spiralDisplay, setSpiralDisplay }) {
   const handleSpiralChange = ({target}) => setCurrentSpiral({...currentSpiral, [target.name]: parseFloat(target.value)});
-  
+
+  const handleCopyURL = () =>  navigator.clipboard.writeText(
+    `?circles=${currentSpiral.numberOfCircles}` + 
+    `&radius=${currentSpiral.startingRadius}` +
+    `&increment=${currentSpiral.radiusIncrement}` +
+    `&offset=${currentSpiral.offsetDistance}` +
+    `&angle=${currentSpiral.angleIncrement}` +
+    `&speed=${spiralDisplay.speed}` +
+    `&stroke=${spiralDisplay.strokeWidth}`
+  );
+
   const handleDownload = () => {
     const filename = `${currentSpiral.name.toLowerCase().replace(/\s+/g, '-')}-demisphere.svg`;
     downloadSVG(
@@ -189,6 +199,7 @@ function SpiralControls({ currentSpiral, setCurrentSpiral, spiralDisplay, setSpi
         />
         Reverse
       </label>
+      <button type="button" onClick={handleCopyURL}>🔗 Copy URL</button>
       <button type="button" onClick={handleDownload}>📥 Download</button>
       <a href="https://github.com/josh-frank/rotary-demisphere" target="_blank" rel="noopener noreferrer" title="View on GitHub">
         <img src={githubLogo} className='github' alt="GitHub" width="20" height="20" />
@@ -220,10 +231,10 @@ function App() {
 
   const [currentSpiral, setCurrentSpiral] = useState( !urlParams.size ? spirals[0] : {
     name: 'Custom',
-    numberOfCircles: parseInt(urlParams.get('circles')) || 10,
-    startingRadius: parseFloat(urlParams.get('radius')) || 20,
-    radiusIncrement: parseFloat(urlParams.get('increment')) || 20 * goldenRatio,
-    offsetDistance: parseFloat(urlParams.get('offset')) || 15,
+    numberOfCircles: parseInt(urlParams.get('circles')) || 11,
+    startingRadius: parseFloat(urlParams.get('radius')) || 16,
+    radiusIncrement: parseFloat(urlParams.get('increment')) || 16 * goldenRatio,
+    offsetDistance: parseFloat(urlParams.get('offset')) || 13,
     angleIncrement: parseFloat(urlParams.get('angle')) || (Math.PI * 2) / goldenRatio,
   } );
   
