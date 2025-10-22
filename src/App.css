@@ -3,7 +3,7 @@ form {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0;
+  gap: 10px;
   position: relative;
   z-index: 1000;
   padding: 20px;
@@ -49,6 +49,11 @@ aside {
   align-items: flex-end;
 }
 
+hr {
+  width: 50%;
+  margin: 20px;
+}
+
 svg {
   position: absolute;
   top: 0;
@@ -58,7 +63,7 @@ svg {
   z-index: -1000;
 }
 
-circle {
+circle.outline {
   fill: none;
   stroke: black;
 }
@@ -112,7 +117,7 @@ circle {
     background: #1a1a1a;
   }
   
-  circle {
+  circle.outline {
     stroke: #e0e0e0;
   }
 

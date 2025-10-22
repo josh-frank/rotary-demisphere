@@ -74,7 +74,8 @@ function SpiralControls({ currentSpiral, setCurrentSpiral, spiralDisplay, setSpi
   const handleSpiralChange = ({target}) => setCurrentSpiral({...currentSpiral, [target.name]: parseFloat(target.value)});
 
   const handleCopyURL = () =>  navigator.clipboard.writeText(
-    `?circles=${currentSpiral.numberOfCircles}` + 
+    'https://rotarydemisphere.com/' +
+    `?circles=${currentSpiral.numberOfCircles}` +
     `&radius=${currentSpiral.startingRadius}` +
     `&increment=${currentSpiral.radiusIncrement}` +
     `&offset=${currentSpiral.offsetDistance}` +
@@ -166,7 +167,7 @@ function SpiralControls({ currentSpiral, setCurrentSpiral, spiralDisplay, setSpi
         <button onClick={() => setCurrentSpiral({...currentSpiral, angleIncrement: currentSpiral.angleIncrement / goldenRatio})}>÷φ</button>
       </aside>
     </label>
-    <hr style={{width: '50%'}} />
+    <hr />
     <label htmlFor="strokeWidth">
       Stroke Width
       <input
@@ -192,7 +193,10 @@ function SpiralControls({ currentSpiral, setCurrentSpiral, spiralDisplay, setSpi
     <aside>
       <button type="button" onClick={handleCopyURL}>🔗Copy</button>
       <button type="button" onClick={handleDownload}>📥Save</button>
+      {/* <button type="button" onClick={() => setSpiralDisplay({...spiralDisplay, flip: { x: !spiralDisplay.x, y: spiralDisplay.y} })}>Flip X</button>
+      <button type="button" onClick={() => setSpiralDisplay({...spiralDisplay, flip: { x: spiralDisplay.x, y: !spiralDisplay.y} })}>Flip Y</button> */}
     </aside>
+    <hr />
     <aside>
       <label htmlFor="reverse">
         <input
@@ -202,6 +206,15 @@ function SpiralControls({ currentSpiral, setCurrentSpiral, spiralDisplay, setSpi
           onChange={() => setSpiralDisplay({...spiralDisplay, reverse: !spiralDisplay.reverse})}
         />
         Reverse
+      </label>
+      <label htmlFor="contrast">
+        <input
+          type="checkbox"
+          name="contrast"
+          checked={spiralDisplay.contrast}
+          onChange={() => setSpiralDisplay({...spiralDisplay, contrast: !spiralDisplay.contrast})}
+        />
+        Contrast
       </label>
       <a href="https://github.com/josh-frank/rotary-demisphere" target="_blank" rel="noopener noreferrer" title="View on GitHub">
         <img src={githubLogo} className='github' alt="GitHub" width="20" height="20" />
@@ -242,9 +255,34 @@ function App() {
   
   const [spiralDisplay, setSpiralDisplay] = useState({
     reverse: false,
+    contrast: false,
     strokeWidth: parseFloat(urlParams.get('stroke')) || 1.5,
     speed: parseFloat(urlParams.get('speed')) || 2000,
+    flip: { x: false, y: false },
   });
+
+  const demisphereCoordinatesToCircles = ({cx, cy, r}, index) => {
+    if (spiralDisplay.contrast) {
+      return <circle
+        key={index}
+        cx={cx}
+        cy={cy}
+        r={r}
+        strokeWidth={spiralDisplay.strokeWidth}
+        fill={index % 2 ? '#000' : '#e0e0e0'}
+        stroke={'none'}
+      />;
+    } else {
+      return <circle
+        className='outline'
+        key={index}
+        cx={cx}
+        cy={cy}
+        r={r}
+        strokeWidth={spiralDisplay.strokeWidth}
+      />;
+    }
+  }
 
   return <>
 
@@ -270,12 +308,11 @@ function App() {
         className={spiralDisplay.reverse ? "reverse" : "forward"}
         style={{
           animationDuration: `${spiralDisplay.speed}ms`,
-          WebkitAnimationDuration: `${spiralDisplay.speed}ms`
+          WebkitAnimationDuration: `${spiralDisplay.speed}ms`,
+          transform: spiralDisplay.flip.x ? 'scaleX(-1)' : spiralDisplay.flip.y ? 'scaleY(-1)' : 'none',
         }}
       >
-        {generateDemisphere(currentSpiral).map(({cx, cy, r}, index) =>
-          <circle key={index} cx={cx} cy={cy} r={r} strokeWidth={spiralDisplay.strokeWidth} />
-        )}
+        {generateDemisphere(currentSpiral).reverse().map(demisphereCoordinatesToCircles)}
       </g>
     </svg>
 
